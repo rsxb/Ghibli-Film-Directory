@@ -20,8 +20,8 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let title = movieTitle!.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-        let urlRequest = URLRequest(url: URL(string: "\(baseUrl)\(title!)")!)
+        guard let title = movieTitle!.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
+        let urlRequest = URLRequest(url: URL(string: "\(baseUrl)\(title)")!)
         webView.load(urlRequest)
     }
 

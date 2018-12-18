@@ -29,20 +29,18 @@ class DetailViewController: UIViewController {
     }
 
     func configureView() {
-        if let detail = detailItem {
-            if let title = movieTitle {
-                title.text = detail.title
+        guard let detail = detailItem else { return }
+        guard let title = movieTitle else { return }
+        title.text = detail.title
 
-                originalTitle.text = detail.originalTitle
-                releaseDate.text = detail.releaseDate
-                rating.text = detail.voteAverage.description
-                popularity.text = detail.popularity.description
-                overview.text = detail.overview
+        originalTitle.text = detail.originalTitle
+        releaseDate.text = detail.releaseDate
+        rating.text = detail.voteAverage.description
+        popularity.text = detail.popularity.description
+        overview.text = detail.overview
 
-                let bytes = try? Data(contentsOf: URL(string: "\(baseUrl)\(detail.posterPath)")!)
-                poster.image = UIImage(data: bytes!)
-            }
-        }
+        guard let bytes = try? Data(contentsOf: URL(string: "\(baseUrl)\(detail.posterPath)")!) else { return }
+        poster.image = UIImage(data: bytes)
     }
 
     override func viewDidLoad() {

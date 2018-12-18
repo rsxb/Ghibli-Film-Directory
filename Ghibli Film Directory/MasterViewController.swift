@@ -19,9 +19,9 @@ class MasterViewController: UITableViewController {
     var movies = [MovieService.Movie]()
 
     func populateMovies() {
-        let json = try? Data(contentsOf: URL(string: "https://api.themoviedb.org/4/discover/movie?api_key=68e6eaafcf08f3b6df1f24ebbd150d7b&with_companies=10342")!)
-
-        movies = try! JSONDecoder().decode(MovieService.self, from: json!).results
+        guard let json = try? Data(contentsOf: URL(string: "https://api.themoviedb.org/4/discover/movie?api_key=68e6eaafcf08f3b6df1f24ebbd150d7b&with_companies=10342")!) else { return }
+        // decode automatically using Decodable protocol
+        movies = try! JSONDecoder().decode(MovieService.self, from: json).results
     }
 
     override func viewDidLoad() {
@@ -38,13 +38,12 @@ class MasterViewController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
-            if let indexPath = tableView.indexPathForSelectedRow {
-                let movie = movies[indexPath.row]
-                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = movie
-                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-                controller.navigationItem.leftItemsSupplementBackButton = true
-            }
+            guard let indexPath = tableView.indexPathForSelectedRow else { return }
+            let movie = movies[indexPath.row]
+            let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+            controller.detailItem = movie
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
     }
 
@@ -65,15 +64,14 @@ class MasterViewController: UITableViewController {
         cell.textLabel!.text = movie.title
         cell.detailTextLabel!.text = movie.originalTitle
 
-        if let view = cell.imageView {
-            // style the cell
-            view.contentMode = .scaleAspectFit
-            view.clipsToBounds = true
+        // style the cell
+        guard let view = cell.imageView else { return cell }
+        view.contentMode = .scaleAspectFit
+        view.clipsToBounds = true
 
-            // add image to cell
-            let bytes = try? Data(contentsOf: URL(string: "\(baseUrl)\(movie.posterPath)")!)
-            view.image = UIImage(data: bytes!)
-        }
+        // add image to cell
+        guard let bytes = try? Data(contentsOf: URL(string: "\(baseUrl)\(movie.posterPath)")!) else { return cell }
+        view.image = UIImage(data: bytes)
         
         return cell
     }
