@@ -51,7 +51,7 @@ class DetailViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "openWiki" {
             let controller = segue.destination as! WebViewController
-            controller.movieTitle = detailItem?.title
+            controller.detailItem = detailItem?.title
         }
     }
 

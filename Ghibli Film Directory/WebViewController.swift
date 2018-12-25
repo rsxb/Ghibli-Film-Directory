@@ -15,12 +15,12 @@ class WebViewController: UIViewController {
 
     let baseUrl = "https://www.wikipedia.org/wiki/"
 
-    var movieTitle: String?
+    var detailItem: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let title = movieTitle!.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
+        guard let title = detailItem!.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
         let urlRequest = URLRequest(url: URL(string: "\(baseUrl)\(title)")!)
         webView.load(urlRequest)
     }
